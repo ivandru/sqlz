@@ -451,7 +451,7 @@ func (stmt *SelectStmt) ToSQL(rebind bool) (asSQL string, bindings []interface{}
 	}
 
 	if stmt.LimitTo > 0 {
-		clauses = append(clauses, fmt.Sprintf("LIMIT %d", stmt.LimitTo))
+		clauses = append(clauses, fmt.Sprintf("FETCH NEXT %d ROWS ONLY", stmt.LimitTo))
 	}
 
 	if stmt.OffsetFrom > 0 {
@@ -460,7 +460,7 @@ func (stmt *SelectStmt) ToSQL(rebind bool) (asSQL string, bindings []interface{}
 			offset += fmt.Sprintf(" %d", stmt.OffsetRows)
 		}
 
-		clauses = append(clauses, "OFFSET "+offset)
+		clauses = append(clauses, "OFFSET "+offset+" ROWS")
 	}
 
 	for _, lock := range stmt.Locks {
